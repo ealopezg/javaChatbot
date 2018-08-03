@@ -3,6 +3,7 @@ import java.util.*;
 public class Chatbot{
 	private int personalidad;
 	private int seed;
+	private Pelicula[] cartelera;
 	
 
 	public Chatbot(int personalidad,int seed){
@@ -13,7 +14,6 @@ public class Chatbot{
 	
 
 	public Message generateMessage(Message inMessage){
-
 		Message out = new Message()
 	}
 

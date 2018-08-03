@@ -3,7 +3,6 @@ public class Pelicula{
 	private String gender
 	private float score;
 	private String dia;
-	pr
 
 
 	public Pelicula(String name,float scr){
@@ -12,7 +11,7 @@ public class Pelicula{
 	}
 
 	public String toString(){
-		return this.nombre + '(' + this.scr.toString() + ')';
+		return this.nombre + ' (' + this.score.toString() + ')';
 	}
 
 	public String getGender(){
