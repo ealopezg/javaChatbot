@@ -2,8 +2,6 @@ public class Pelicula{
 	private String name;
 	private String gender
 	private float score;
-	private String dia;
-	pr
 
 
 	public Pelicula(String name,float scr){

@@ -1,3 +1,4 @@
+
 public class Hora{
 	public int hor;
 	public int min;
