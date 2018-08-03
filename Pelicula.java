@@ -5,6 +5,7 @@ public class Pelicula{
 	private String dia;
 
 
+
 	public Pelicula(String name,float scr){
 		this.nombre=name;
 		this.score=scr;
