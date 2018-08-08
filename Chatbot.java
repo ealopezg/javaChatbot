@@ -1,4 +1,5 @@
 import java.util.*;
+import java.time.*;
 
 public class Chatbot{
 	private int personalidad;
@@ -34,13 +35,70 @@ public class Chatbot{
 		}
 	}
 
-
-
+	private String replaceBrackets(String entrada,String[] lista){
+		String[] entradaSplit = entrada.split("{}");
+		String salida = "";
+		for(int i = 0;i<(entradaSplit.length-1);i++){
+			if(i<lista.length){
+				salida = salida + entradaSplit[i]+lista[i];
+			}
+			else{
+				salida=salida+entradaSplit[i];
+			}
+		}
+		return salida;
+	}
 /*
-	public Message generateMessage(Message inMessage){
-		Message out = new Message();
+	private String searchKeyword(String in){
+
 	}
 */
+	public Message initialMessage(){
+		int hr =LocalDateTime.now().getHour();
+		String str="";
+		if (5<hr && hr<=11){
+			str = choose(this.respuestas[0][0]);
+		}
+		if (11<hr && hr<=20){
+			str = choose(this.respuestas[0][1]);
+		}
+		if ((20<hr && hr<=23) || (0<=hr && hr<=5)){
+			str = choose(this.respuestas[0][2]);
+		}
+
+		Message outMessage = new Message(str,"CHATBOT");
+		return outMessage;
+
+	}
+
+	private String choose(String[] lista){
+		int largo = lista.length;
+		int i =this.random.nextInt(largo);
+		return lista[i];
+	}
+
+
+	private Pelicula recomendarPelicula(String genero){
+		ArrayList<Pelicula> aux = new ArrayList();
+		for(int i=0;i<this.cartelera.size();i++){
+			if(this.cartelera.get(i).getGender().equals(genero)){
+				aux.add(this.cartelera.get(i));
+			}
+
+		}
+		return Collections.max(aux);
+	}
+
+
+
+
+
+
+	public Message generateMessage(Message inMessage){
+		String[] inMessageSplit = inMessage.getMessage().split(" ");
+
+
+	}
 
 
 }

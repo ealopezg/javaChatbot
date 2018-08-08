@@ -24,9 +24,37 @@ public class Main{
 			peliculas.add(peliculaNueva);
 		}
 
-		Chatbot chatbot = new Chatbot(2323,peliculas);
+		
 
-		chatbot.mostrarPeliculas();
+		User usuario = new User("Esteban");
+		Scanner keyboard = new Scanner(System.in);
+		Log log = new Log();
+		int seed = 0;
+		Chatbot chatbot;
+		Message inMessage;
+		Message outMessage;
+	
+		boolean flag = true;
+		boolean started = false;
+		while(flag){
+			System.out.print(usuario.getNombre()+"> ");
+			inMessage = new Message(keyboard.nextLine(),usuario.getNombre());
+			log.writeToLog(inMessage);
+			if(inMessage.isEndDialog()){
+				flag=false;
+			}
+			if(inMessage.isBeginDialog() && started==false){
+				seed = Integer.parseInt(inMessage.commandArgs()[0]);
+				chatbot = new Chatbot(seed,peliculas);
+				outMessage = chatbot.initialMessage();
+				System.out.println(outMessage.getSender()+"> "+outMessage.getMessage());
+				log.writeToLog(outMessage);
+				started=true;
+			}
+
+
+		}
+		System.out.print(log.toString());
 
 
 	}

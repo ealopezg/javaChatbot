@@ -1,18 +1,26 @@
+import java.util.*;
 
 public class Log{
-	private ArrayList<String> mensajes;
-	private String lastMsgUser;
-	private String lastMsgChatbot;
+	private ArrayList<Message> mensajes;
 
-	public void Log(){
+	public Log(){
 		this.mensajes = new ArrayList(); 
 	}
 
-	public void writeToLog(Message mensaje){
-		str = usuario.nombre + "" + mensaje;
-		this.mensajes.add(str);
+	public Log(String nombreArchivo){
+		
 	}
 
-	public 
+	public void writeToLog(Message mensaje){
+		this.mensajes.add(mensaje);
+	}
+
+	public String toString(){
+		String salida="";
+		for(int i=0;i<mensajes.size();i++){
+			salida = salida + mensajes.get(i).getDateStr() +" "+ mensajes.get(i).getSender() + ": " + mensajes.get(i).getMessage() + "\n";
+		}
+		return salida;
+	}
 
 }

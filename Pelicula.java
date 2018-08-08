@@ -1,6 +1,6 @@
 import java.util.*;
 
-public class Pelicula{
+public class Pelicula implements Comparable<Pelicula>{
 	private String name;
 	private String gender;
 	private int score;
@@ -25,6 +25,7 @@ public class Pelicula{
 		return horarios;
 
 	}
+	
 
 	public String toString(){
 	
@@ -68,6 +69,13 @@ public class Pelicula{
 	public String getName(){
 		return this.name;
 	}
+
+	public int compareTo(Pelicula other){
+		return Integer.compare(this.score, other.score);
+	}
+
+
+
 
 
 }

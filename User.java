@@ -31,9 +31,13 @@ public class User{
 		this.genero = gen;
 	}
 
+	public String getNombre(){
+		return this.nombre;
+	}
+
 
 	public void setPelicula(String pelicula){
-		this.pelicula = pel;
+		this.pelicula = pelicula;
 	}
 
 	public void setDia(String dia){
