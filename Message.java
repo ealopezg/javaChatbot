@@ -1,18 +1,21 @@
+import java.util.*;
+
 public class Message{
 	private User sender;
 	private String message;
 	private String hour;
-	private String keyboard
+	private String keyboard;
 
 	public Message(String message,String sender,String hour){
 		this.message=message;
 		this.sender=sender;
 		this.hour=hour;
 	}
-
+/*
 	private String getKeyboard(){
-		if 
+		lista
 	}
+*/
 
 	public boolean isCommand(){
 		if(msg.charAt(0)=='!'){
