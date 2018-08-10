@@ -1,0 +1,10 @@
+[2018-08-09 08:25:49] Esteban: !beginDialog
+[2018-08-09 08:25:55] Esteban: !beginDialog 242
+[2018-08-09 08:25:55] CHATBOT: Buenas tardes, que quieres?
+[2018-08-09 08:26:00] Esteban: ver los horarios
+[2018-08-09 08:26:00] CHATBOT: Que dia queri?
+[2018-08-09 08:26:07] Esteban: lunes
+[2018-08-09 08:26:07] CHATBOT: Que pelicula queri ver?
+[2018-08-09 08:26:09] Esteban: tully
+[2018-08-09 08:26:09] CHATBOT: Pal LUNES, tenemos los siguientes horarios   13:10  15:50  18:30  21:00,Hasta la vista... !!!
+[2018-08-09 08:26:13] Esteban: !saveLog

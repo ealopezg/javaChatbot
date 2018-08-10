@@ -1,4 +1,5 @@
 import java.util.*;
+import java.io.*;
 
 public class Main{
 	public static void main(String[] args) {
@@ -18,39 +19,176 @@ public class Main{
 										"Yo Soy Simon,ROMANCE,81,17:20;19:10!12:50;19:10!12:50;19:10!17:20;19:10!12:50;19:10!12:50;19:10!17:20;19:10"
 										};
 		ArrayList<Pelicula> peliculas = new ArrayList();
-
 		for(int i = 0; i < listaStringPeliculas.length ; i++){
 			Pelicula peliculaNueva = new Pelicula(listaStringPeliculas[i]);
 			peliculas.add(peliculaNueva);
 		}
 
+
 		
 
-		User usuario = new User("Esteban");
+		User usuario = new User();
 		Scanner keyboard = new Scanner(System.in);
 		Log log = new Log();
 		int seed = 0;
-		Chatbot chatbot;
+		Chatbot chatbot =new Chatbot();
 		Message inMessage;
 		Message outMessage;
 	
 		boolean flag = true;
 		boolean started = false;
+		boolean command = false;
+		System.out.println("Este chatbot es de un Cine.\nte recomienda peliculas de la cartelera, \ny te muestra los horarios para una película en especifico\nPara iniciar el chat usa el comando '!beginDialog seed '\n");
 		while(flag){
 			System.out.print(usuario.getNombre()+"> ");
 			inMessage = new Message(keyboard.nextLine(),usuario.getNombre());
-			log.writeToLog(inMessage);
-			if(inMessage.isEndDialog()){
-				flag=false;
+			if(( inMessage.isEndDialog() || inMessage.isSaveLog() || inMessage.isRate()) && !started){
+				System.out.println("[!] No puedes utilizar este comando si no has iniciado el chat con !beginDialog");
 			}
-			if(inMessage.isBeginDialog() && started==false){
-				seed = Integer.parseInt(inMessage.commandArgs()[0]);
-				chatbot = new Chatbot(seed,peliculas);
-				outMessage = chatbot.initialMessage();
-				System.out.println(outMessage.getSender()+"> "+outMessage.getMessage());
-				log.writeToLog(outMessage);
-				started=true;
+			else if((inMessage.isBeginDialog() || inMessage.isLoadLog())&& started){
+				System.out.println("[!] No puedes utilizar este comando si has iniciado el chat");
 			}
+			else{
+				if( !inMessage.isLoadLog() || !inMessage.isExit() ){
+					log.writeToLog(inMessage);
+				}
+				command = inMessage.isCommand();
+
+				if(inMessage.isExit()){
+					flag=false;
+				}
+
+
+				if(inMessage.isEndDialog()){
+					started = false;
+					outMessage = chatbot.finalMessage();
+					System.out.println(outMessage.getSender()+"> "+outMessage.getMessage());
+					log.writeToLog(outMessage);
+				}
+
+				if(inMessage.isSaveLog()){
+					try {
+						log.saveLog();
+					}
+					catch(IOException e) {
+						  System.out.println("ERROR");
+						}
+				}
+
+				if(inMessage.isLoadLog() && !started){
+					String[] argumentos = inMessage.commandArgs();
+					ArrayList<Message> listaMensajes = log.loadLog(argumentos[0]);
+					Date cbotDate = new Date();
+
+					if(listaMensajes.size()>0){
+						String anuncio = "Archivo "+argumentos[0]+" cargado completamente";
+						System.out.println(anuncio);
+					}
+
+
+					if(listaMensajes.size()>0 &&listaMensajes.get(1)!=null && listaMensajes.get(1).getSender().equals("CHATBOT")){
+						cbotDate = listaMensajes.get(1).getDate();
+					}
+					
+
+					for(int i=0;i<listaMensajes.size();i++){
+						if(!listaMensajes.get(i).getSender().equals("CHATBOT")){
+							cbotDate=listaMensajes.get(i).getDate();
+							
+							inMessage = listaMensajes.get(i);
+							log.writeToLog(inMessage);
+							command = inMessage.isCommand();
+
+
+							if(inMessage.isEndDialog()){
+								started = false;
+								outMessage = chatbot.finalMessage(cbotDate);
+								System.out.println(outMessage.getSender()+"> "+outMessage.getMessage());
+								log.writeToLog(outMessage);
+								usuario = new User();
+
+							}
+
+
+							if(started && !command){
+								int[] cNU=inMessage.determinarCaminoNivel();
+								String[] strs ={};
+								if(!inMessage.dijoGenero().equals(" ") && cNU[0]==1 && cNU[1]==1 && !usuario.hasGenero()){
+									String genero = inMessage.dijoGenero();
+									strs = chatbot.recomendarPelicula(genero);
+									usuario.setGenero(genero);
+								}
+								if(!inMessage.dijoDia().equals(" ") && cNU[0]==2 && cNU[1]==1 && !usuario.hasDia()){
+									String dia = inMessage.dijoDia();
+									usuario.setDia(dia);
+								}
+								if(!inMessage.dijoPelicula().equals(" ") && cNU[0]==2 && cNU[1]==2 && !usuario.hasPelicula()){
+									String pelicula = inMessage.dijoPelicula();
+									strs = chatbot.devolverHorarios(pelicula,usuario.getDia());
+									usuario.setPelicula(pelicula);
+								}
+
+								outMessage = chatbot.generateMessage(inMessage,log.getLastMessageFrom("CHATBOT").getMessage(),strs,cbotDate);
+								log.writeToLog(outMessage);
+
+
+							}
+
+							if(inMessage.isBeginDialog() && !started){
+								seed = Integer.parseInt(inMessage.commandArgs()[0]);
+								chatbot = new Chatbot(seed,peliculas);
+								outMessage = chatbot.initialMessage(cbotDate);
+								log.writeToLog(outMessage);
+								started=true;
+							}
+
+
+							
+
+						}	
+
+					}
+
+
+					
+				}
+
+				if(started && !command){
+					int[] cNU=inMessage.determinarCaminoNivel();
+					String[] strs ={};
+					if(!inMessage.dijoGenero().equals(" ") && cNU[0]==1 && cNU[1]==1 && !usuario.hasGenero()){
+						String genero = inMessage.dijoGenero();
+						strs = chatbot.recomendarPelicula(genero);
+						usuario.setGenero(genero);
+					}
+					if(!inMessage.dijoDia().equals(" ") && cNU[0]==2 && cNU[1]==1 && !usuario.hasDia()){
+						String dia = inMessage.dijoDia();
+						usuario.setDia(dia);
+					}
+					if(!inMessage.dijoPelicula().equals(" ") && cNU[0]==2 && cNU[1]==2 && !usuario.hasPelicula()){
+						String pelicula = inMessage.dijoPelicula();
+						strs = chatbot.devolverHorarios(pelicula,usuario.getDia());
+						usuario.setPelicula(pelicula);
+					}
+
+					outMessage = chatbot.generateMessage(inMessage,log.getLastMessageFrom("CHATBOT").getMessage(),strs);
+					System.out.println(outMessage.getSender()+"> "+outMessage.getMessage());
+					log.writeToLog(outMessage);
+
+
+				}
+
+				if(inMessage.isBeginDialog() && !started){
+					seed = Integer.parseInt(inMessage.commandArgs()[0]);
+					chatbot = new Chatbot(seed,peliculas);
+					outMessage = chatbot.initialMessage();
+					System.out.println(outMessage.getSender()+"> "+outMessage.getMessage());
+					log.writeToLog(outMessage);
+					started=true;
+				}
+			}
+
+
 
 
 		}
@@ -58,6 +196,9 @@ public class Main{
 
 
 	}
+
+
+
 
 
 

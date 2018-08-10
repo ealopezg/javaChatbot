@@ -5,10 +5,9 @@ public class User{
 	private String genero;
 	private String pelicula;
 	private String dia;
-	private String hora;
 
-	public User(String name){
-		this.nombre = name;
+	public User(){
+		this.nombre="USUARIO";
 	}
 
 	public boolean hasGenero(){
@@ -23,9 +22,6 @@ public class User{
 		return this.dia!=null;
 	}
 
-	public boolean hasHora(){
-		return this.hora!=null;
-	}
 
 	public void setGenero(String gen){
 		this.genero = gen;
@@ -33,6 +29,10 @@ public class User{
 
 	public String getNombre(){
 		return this.nombre;
+	}
+
+	public String getDia(){
+		return this.dia;
 	}
 
 
@@ -44,9 +44,6 @@ public class User{
 		this.dia = dia;
 	} 
 
-	public void setHora(String hora){
-		this.hora=hora;
-	}
 
 
 

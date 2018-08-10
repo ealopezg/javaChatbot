@@ -14,14 +14,21 @@ public class Pelicula implements Comparable<Pelicula>{
 		this.gender=splitPelicula[1];
 		this.score=Integer.parseInt(splitPelicula[2]);
 		this.horarios=readStringHorario(splitPelicula[3]);
-
 	}
+
+	public Pelicula(){}
 
 	private List<List<String>> readStringHorario(String linea){
 		List<List<String>> horarios = new ArrayList();
 		String[] listaDias = linea.split("!");
-		horarios.add(Arrays.asList(listaDias[0].split(";")));
 
+		horarios.add(Arrays.asList(listaDias[0].split(";")));
+		horarios.add(Arrays.asList(listaDias[1].split(";")));
+		horarios.add(Arrays.asList(listaDias[2].split(";")));
+		horarios.add(Arrays.asList(listaDias[3].split(";")));
+		horarios.add(Arrays.asList(listaDias[4].split(";")));
+		horarios.add(Arrays.asList(listaDias[5].split(";")));
+		horarios.add(Arrays.asList(listaDias[6].split(";")));
 		return horarios;
 
 	}
@@ -36,22 +43,24 @@ public class Pelicula implements Comparable<Pelicula>{
 		return this.gender;
 	}
 
-	public float getScore(){
-		return this.score;
+	public String getScore(){
+		String scoreString = Integer.toString(this.score);
+		return scoreString.substring(0,1)+"."+scoreString.substring(1);
 	}
 
 	private String diaToString(int n){
-		String[] diasSemana={"LUNES","MARTES","MIERCOLES","JUEVES","SABADO","DOMINGO"};
+		String[] diasSemana={"LUNES","MARTES","MIERCOLES","JUEVES","VIERNES","SABADO","DOMINGO"};
 		return diasSemana[n];
 	}
 
 	private int diaToInt(String dia){
-		String[] diasSemana={"LUNES","MARTES","MIERCOLES","JUEVES","SABADO","DOMINGO"};
+		String[] diasSemana={"LUNES","MARTES","MIERCOLES","JUEVES","VIERNES","SABADO","DOMINGO"};
 		int i=0;
 		while(i<7){
 			if(dia.equals(diasSemana[i])){
 				break;
 			}
+			i++;
 		}
 		return i;
 	}

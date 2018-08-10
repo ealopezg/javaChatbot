@@ -11,8 +11,16 @@ public class Message{
 		this.message=message;
 		this.sender=sender;
 		this.date=new Date();
+	}
+
+	public Message(String message,String sender,Date fecha){
+		this.message=message;
+		this.sender=sender;
+		this.date=fecha;
 
 	}
+
+
 
 	public boolean isCommand(){
 		if(this.message.length()>0){
@@ -65,6 +73,102 @@ public class Message{
 		return (messageSplit[0].equals("!rate") && (messageSplit.length==3));
 	}
 
+	public boolean isExit(){
+		return this.message.equals("!exit");
+	}
+
+	public String dijoDia(){
+		String[] lista = this.message.split(" ");
+		String[] diasSemana={"LUNES","MARTES","MIERCOLES","JUEVES","VIERNES","SABADO","DOMINGO"};
+		for(int i = 0;i<lista.length;i++){
+			for(int j = 0;j<diasSemana.length;j++){
+				if(diasSemana[j].equals(lista[i].toUpperCase())){
+					return diasSemana[j];
+				}
+			}
+		}
+		return "";
+	}
+
+	public String dijoGenero(){
+		String[] lista = this.message.split(" ");
+		String[] listaGeneros={"ACCION","INFANTIL","DRAMA","ANIMACION","TERROR","COMEDIA","ROMANCE"};
+		for(int i = 0;i<lista.length;i++){
+			for(int j = 0;j<listaGeneros.length;j++){
+				if(listaGeneros[j].equals(lista[i].toUpperCase())){
+					return listaGeneros[j];
+				}
+			}
+		}
+		return "";
+	}
+
+	public String dijoPelicula(){
+		String[] listaPeliculas={"Avengers: Infinity war","Deadpool 2","Desobediencia","Gnomos Al Ataque","Isla de Perros","La Isla De Los Pinguinos","La Profecia","Los Extranos Caceria Nocturna","Rampage: Devastacion","Sexy Por Accidente","Sherlock Gnomes","Tully","Yo Soy Simon"};
+		for(int j = 0;j<listaPeliculas.length;j++){
+			if(this.message.toUpperCase().contains(listaPeliculas[j].toUpperCase())){
+				return listaPeliculas[j];
+			}
+		}
+		return "";
+	}
+
+	private boolean dijoRecomendar(){
+		String[] lista = this.message.split(" ");
+		String[] listaKeyword = {"RECOMIENDAME","RECOMENDAR","SUGIERE","SUGIEREME"};
+		for(int i = 0;i<lista.length;i++){
+			for(int j = 0;j<listaKeyword.length;j++){
+				if(listaKeyword[j].equals(lista[i].toUpperCase())){
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+
+	private boolean dijoHorarios(){
+		String[] lista = this.message.split(" ");
+		String[] listaKeyword = {"HORARIOS"};
+		for(int i = 0;i<lista.length;i++){
+			for(int j = 0;j<listaKeyword.length;j++){
+				if(listaKeyword[j].equals(lista[i].toUpperCase())){
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+
+
+	
+
+
+	public int[] determinarCaminoNivel(){
+		if(this.dijoRecomendar()){
+			return new int[]{1,0};
+		}
+		else if(!this.dijoGenero().equals("")){
+			return new int[]{1,1};
+		}
+		else if(this.dijoHorarios()){
+			return new int[]{2,0};
+		}
+		else if(!this.dijoDia().equals("")){
+			return new int[]{2,1};
+		}
+		else if(!this.dijoPelicula().equals("")){
+			return new int[]{2,2};
+		}
+		return new int[]{-1,-1};
+	}
+
+	public String toString(){
+		return this.getDateStr()+">"+this.getSender()+">"+this.getMessage();
+	}
+
+
+
+
 
 
 
@@ -77,7 +181,7 @@ public class Message{
 	}
 
 	public String getDateStr(){
-		SimpleDateFormat form = new SimpleDateFormat("[yyyy-mm-dd hh:mm:ss]");
+		SimpleDateFormat form = new SimpleDateFormat("[yyyy-MM-dd HH:mm:ss]");
 		return form.format(this.date);
 
 	}
