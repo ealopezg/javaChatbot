@@ -1,5 +1,23 @@
+
 import java.util.*;
 import java.io.*;
+
+/**
+ *   Chatbot programado en JAVA
+ *
+ * 
+ * Nombre: Esteban López Garrido
+ * Rut: 19.837.971-9
+ *
+ * Seccion: C-3
+ * Profesor: Daniel Gacitúa
+ *
+ *    Universidad de Santiago de Chile
+ * Departamento de Ingenieria en Informática
+ * 		Paradigmas de programacion
+ * 
+ * 
+ */
 
 public class Main{
 	public static void main(String[] args) {
@@ -18,27 +36,32 @@ public class Main{
 										"Tully,DRAMA,73,13:10;15:50;18:30;21:00!13:10;15:50;18:30;21:00!13:10;15:50;18:30;21:00!13:10;15:50;18:30;21:00!13:10;15:50;18:30;21:00!13:10;15:50;18:30;21:00!13:10;15:50;18:30;21:00",
 										"Yo Soy Simon,ROMANCE,81,17:20;19:10!12:50;19:10!12:50;19:10!17:20;19:10!12:50;19:10!12:50;19:10!17:20;19:10"
 										};
+		/** Lee el string de arriba y genera una lista de peliculas */
 		ArrayList<Pelicula> peliculas = new ArrayList();
 		for(int i = 0; i < listaStringPeliculas.length ; i++){
 			Pelicula peliculaNueva = new Pelicula(listaStringPeliculas[i]);
 			peliculas.add(peliculaNueva);
 		}
 
-		
+		/** Creacion de los objetos */
 		User usuario = new User();
-		Scanner keyboard = new Scanner(System.in);
-		Log log = new Log();
-		int seed = 0;
 		Chatbot chatbot =new Chatbot();
 		Message inMessage;
 		Message outMessage;
-	
+
+		Scanner keyboard = new Scanner(System.in);
+		Log log = new Log();
+		int seed = 0;
+
+		/** Se definen los flags principales */
 		boolean flag = true;
 		boolean started = false;
 		boolean finished = false;
 		boolean command = false;
 		boolean rated = false;
 		System.out.println("Este chatbot es de un Cine.\nte recomienda peliculas de la cartelera, \ny te muestra los horarios para una película en especifico\nPara iniciar el chat usa el comando '!beginDialog seed '\nPara más ayuda usa '!help\n");
+		
+		/** Ciclo principal */
 		while(flag){
 			System.out.print(usuario.getNombre()+"> ");
 			inMessage = new Message(keyboard.nextLine(),usuario.getNombre());
@@ -275,7 +298,6 @@ public class Main{
 
 
 		}
-		System.out.print(log.toString());
 
 
 	}
