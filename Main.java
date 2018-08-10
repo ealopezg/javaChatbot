@@ -65,13 +65,18 @@ public class Main{
 		while(flag){
 			System.out.print(usuario.getNombre()+"> ");
 			inMessage = new Message(keyboard.nextLine(),usuario.getNombre());
-			if(( inMessage.isEndDialog() || inMessage.isRate()) && !started){
+			if(inMessage.getMessage().equals("")){
+				System.out.println("[!] Por favor ingresa algo");
+			}
+			else{
+
+			if( inMessage.isEndDialog() && !started){
 				System.out.println("[!] No puedes utilizar este comando si no has iniciado el chat con !beginDialog");
 			}
 			else if((inMessage.isBeginDialog() || inMessage.isLoadLog()) && started){
 				System.out.println("[!] No puedes utilizar este comando si has iniciado el chat");
 			}
-			else if(inMessage.isRate() && rated && started){
+			else if(inMessage.isRate() && rated){
 				System.out.println("[!] No puedes volver a calificar al chatbot");
 			}
 			else if(inMessage.isRate() && !finished){
@@ -146,7 +151,6 @@ public class Main{
 					outMessage = chatbot.finalMessage();
 					System.out.println(outMessage.getSender()+"> "+outMessage.getMessage());
 					log.writeToLog(outMessage);
-					rated = false;
 					usuario = new User();
 				}
 
@@ -200,7 +204,6 @@ public class Main{
 								outMessage = chatbot.finalMessage(cbotDate);
 								log.writeToLog(outMessage);
 								usuario = new User();
-								rated = false;
 
 							}
 
@@ -239,7 +242,8 @@ public class Main{
 								}
 									outMessage = chatbot.initialMessage(cbotDate);
 									log.writeToLog(outMessage);
-									started=true;								
+									started=true;
+									rated = false;								
 							}
 
 
@@ -253,6 +257,7 @@ public class Main{
 
 					
 				}
+
 
 				if(started && !command){
 					int[] cNU=inMessage.determinarCaminoNivel();
@@ -290,8 +295,10 @@ public class Main{
 						outMessage = chatbot.initialMessage();
 						System.out.println(outMessage.getSender()+"> "+outMessage.getMessage());
 						log.writeToLog(outMessage);
-						started=true;								
+						started=true;
+						rated = false;								
 				}
+			}
 			}
 
 

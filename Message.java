@@ -13,6 +13,7 @@ public class Message implements Comparable<Message>{
 	/* Fecha de envio */
 	private Date date;
 
+
 	/**
 	 * Constructor, devuelve un objeto mensaje
 	 * utilizando la fecha actual
