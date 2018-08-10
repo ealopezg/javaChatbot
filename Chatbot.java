@@ -2,6 +2,7 @@ import java.util.*;
 import java.time.*;
 
 public class Chatbot{
+	//Atr
 	private int personalidad;
 	private int seed;
 	private ArrayList<Pelicula> cartelera;
@@ -9,34 +10,33 @@ public class Chatbot{
 	private Random random;
 	
 
-	Chatbot(){
+	Chatbot(){}
 
-	}
 	public Chatbot(int seed,ArrayList<Pelicula> peliculas){
 		this.random = new Random(seed);
-		this.personalidad = devolverPersonalidad();
+		this.personalidad = this.random.nextInt(2);
 		this.seed = seed;
 		this.respuestas=generarListaRespuestas();
 		this.cartelera=peliculas;
 	}
 
-	private int devolverPersonalidad(){
-		return this.random.nextInt(2);
+	public Chatbot(ArrayList<Pelicula> peliculas){
+		this.random = new Random(0);
+		this.personalidad = 0;
+		this.seed = 0;
+		this.respuestas=generarListaRespuestas();
+		this.cartelera=peliculas;
 	}
+
 
 	private String[][][] generarListaRespuestas(){
 		String[][][][] dialogos = {
-			{{{"Hola, en que lo puedo ayudar?", "Buenos dias, en que lo puedo ayudar?", "Hola, que agradable dia, en que lo puedo ayudar?"}, {"Buenas tardes, Que necesita?", "Buenas tardes, Que puedo hacer por usted?"}, {"Buenas noches, Que necesita?", "Que linda que esta la luna.... En que lo puedo ayudar?"}}, {{"Digame algun genero que le guste", "Que genero le gusta?"}, {"Le recomiendo la pelicula: @ , tiene una puntuacion de @ ,Hasta Luego !!!", "Tengo esta pelicula para usted: @ , tiene una puntuacion de @ ,Hasta Luego !!!"}}, {{"Para que dia?", "Que dia?"}, {"Que pelicula desea ver?", "Que pelicula quiere ver?"}, {"Para el dia @, tenemos los siguientes horarios @,Hasta luego !!!", "El dia @ tenemos los siguientes horarios @,Hasta luego !!!"}}, {{"Para que pelicula?", "Que pelicula desea?"}, {"Que dia tiene pensado ir a verla?", "Que dia?"}, {"Bueno, para el dia @ tenemos los siguientes horarios @, Que horario escoge?", "Bueno, para el dia @ le tengo los siguientes horarios @, Que horario escoge?"}, {"Ok, su entrada esta reservada para el dia @ a las @, Hasta Luego !!!", "Ok, su entrada esta reservada para el dia @ a las @, Adios...que tenga un lindo dia !!"}}},
-			{{{"Hola, dime que quieres", "Buenos dias,buenas tardes, que quieres", "Hola, en que te puedo ayudar?"}, {"Buenas tardes, que quieres?", "Buenas tardes, que $&$ queri ?"}, {"Esta brigida la luna... Que necesitai?", "Buenas noches, En que te ayudo?"}}, {{"Digame algun genero que te guste", "Que genero te gusta?"}, {"Te recomiendo la pelicula: @ , tiene una puntuacion de @,Me viro... !!!", "Tengo esta pelicula para vo' : @ , tiene una puntuacion de @,Bye !!!"}}, {{"Pa que dia?", "Que dia queri?"}, {"Que pelicula queri ?", "Que pelicula queri ver?"}, {"Pal @, tenemos los siguientes horarios @,Hasta la vista... !!!", "El @ te tengo los siguientes horarios @,Chao pescao !!!"}}, {{"que pelicula queri", "Que pelicula deseas baby?"}, {"Que dia tienes pensado ir a verla?", "Que dia?"}, {"el dia @ estan los siguientes horarios @,cual quieres", "Bueno, para el dia @ le tengo los siguientes horarios @,Que horario escoges?"}, {"Wena, tu entrada esta reservada para el dia @ a las @,Chao pescao !!!", "Listo compa , tu entrada esta reservada para el dia @ a las @,Hasta la vista !!!"}}}
+			{{{"Soy el Chatbot formal...Hola, en que lo puedo ayudar?", "Soy el Chatbot formal...Buenos dias, en que lo puedo ayudar?", "Soy el Chatbot formal...Hola, que agradable dia, en que lo puedo ayudar?"}, {"Soy el Chatbot formal...Buenas tardes, Que necesita?", "Soy el Chatbot formal...Buenas tardes, Que puedo hacer por usted?"}, {"Soy el Chatbot formal...Buenas noches, Que necesita?", "Soy el Chatbot formal...Que linda que esta la luna.... En que lo puedo ayudar?"}}, {{"Digame algun genero que le guste", "Que genero le gusta?"}, {"Le recomiendo la pelicula: @ , tiene una puntuacion de @ ,Hasta Luego !!!", "Tengo esta pelicula para usted: @ , tiene una puntuacion de @ ,Hasta Luego !!!"}}, {{"Para que dia?", "Que dia?"}, {"Que pelicula desea ver?", "Que pelicula quiere ver?"}, {"Para el dia @, tenemos los siguientes horarios @,Hasta luego !!!", "El dia @ tenemos los siguientes horarios @,Hasta luego !!!"}}, {{"Para que pelicula?", "Que pelicula desea?"}, {"Que dia tiene pensado ir a verla?", "Que dia?"}, {"Bueno, para el dia @ tenemos los siguientes horarios @, Que horario escoge?", "Bueno, para el dia @ le tengo los siguientes horarios @, Que horario escoge?"}, {"Ok, su entrada esta reservada para el dia @ a las @, Hasta Luego !!!", "Ok, su entrada esta reservada para el dia @ a las @, Adios...que tenga un lindo dia !!"}}},
+			{{{"Soy el Chatbot informal...Hola, dime que quieres", "Soy el Chatbot informal...Buenos dias,buenas tardes, que quieres", "Soy el Chatbot informal...Hola, en que te puedo ayudar?"}, {"Soy el Chatbot informal...Buenas tardes, que quieres?", "Soy el Chatbot informal...Buenas tardes, que $&$ queri ?"}, {"Soy el Chatbot informal...Esta brigida la luna... Que necesitai?", "Soy el Chatbot informal...Wenah noshe , que queri?"}}, {{"Digame algun genero que te guste", "Que genero te gusta?"}, {"Te recomiendo la pelicula: @ , tiene una puntuacion de @,Me viro... !!!", "Tengo esta pelicula para vo' : @ , tiene una puntuacion de @,Bye !!!"}}, {{"Pa que dia?", "Que dia queri?"}, {"Que pelicula queri ?", "Que pelicula queri ver?"}, {"Pal @, tenemos los siguientes horarios @,Hasta la vista... !!!", "El @ te tengo los siguientes horarios @,Chao pescao !!!"}}, {{"que pelicula queri", "Que pelicula deseas baby?"}, {"Que dia tienes pensado ir a verla?", "Que dia?"}, {"el dia @ estan los siguientes horarios @,cual quieres", "Bueno, para el dia @ le tengo los siguientes horarios @,Que horario escoges?"}, {"Wena, tu entrada esta reservada para el dia @ a las @,Chao pescao !!!", "Listo compa , tu entrada esta reservada para el dia @ a las @,Hasta la vista !!!"}}}
 			};
 		return dialogos[this.personalidad];
 	}
 
-	public void mostrarPeliculas(){
-		for(int i=0;i<this.cartelera.size();i++){
-			System.out.println(this.cartelera.get(i).toString());
-		}
-	}
 
 	private String replaceBrackets(String entrada,String[] lista){
 		if(lista.length == 0){
@@ -55,23 +55,6 @@ public class Chatbot{
 		return salida;
 	}
 
-	private String searchKeyword(Message inMessage){
-		String[] splitMessage=inMessage.getMessage().split(" ");
-		String[] keywords = {"RECOMENDAR","HORARIOS"};
-		String kword;
-		for(int i=0;i<splitMessage.length;i++){
-			for(int j=0;i<keywords.length;j++){
-				if(keywords[j].equals(splitMessage[i].toUpperCase())){
-					return keywords[j];
-				}
-
-			}
-		}
-		return "";
-	}
-
-	
-
 	public Message initialMessage(){
 		int hr =LocalDateTime.now().getHour();
 		String str="";
@@ -84,7 +67,6 @@ public class Chatbot{
 		if ((20<hr && hr<=23) || (0<=hr && hr<=5)){
 			str = choose(this.respuestas[0][2]);
 		}
-
 		Message outMessage = new Message(str,"CHATBOT");
 		return outMessage;
 
@@ -195,11 +177,6 @@ public class Chatbot{
 	}
 		
 
-
-
-
-
-
 	public Message generateMessage(Message inMessage,String lastCbotMessage,String[] strs){
 		int[] cNU=inMessage.determinarCaminoNivel();
 		int[] cNC=determinarCaminoNivel(lastCbotMessage);
@@ -214,13 +191,11 @@ public class Chatbot{
 			}
 		}
 		else{
-			message = "No entendí lo que me quieres decir!!!!,asegurate de responder lo que te pido";
+			message = "[!] No entendí lo que me quieres decir!!!!,asegurate de responder lo que te pido";
+			return new Message(message,"CHATBOT");
 		}
 		message = replaceBrackets(message,strs);
 		return new Message(message,"CHATBOT");
-
-
-
 	}
 
 	public Message generateMessage(Message inMessage,String lastCbotMessage,String[] strs,Date date){
@@ -237,7 +212,8 @@ public class Chatbot{
 			}
 		}
 		else{
-			message = "No entendí lo que me quieres decir!!!!,asegurate de responder lo que te pido";
+			message = "[!] No entendí lo que me quieres decir!!!!,asegurate de responder lo que te pido";
+			new Message(message,"CHATBOT",date);
 		}
 		message = replaceBrackets(message,strs);
 		return new Message(message,"CHATBOT",date);

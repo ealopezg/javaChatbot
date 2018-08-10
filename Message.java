@@ -1,7 +1,7 @@
 import java.util.*;
 import java.text.SimpleDateFormat;
 
-public class Message{
+public class Message implements Comparable<Message>{
 	private String sender;
 	private String message;
 	private Date date;
@@ -19,8 +19,6 @@ public class Message{
 		this.date=fecha;
 
 	}
-
-
 
 	public boolean isCommand(){
 		if(this.message.length()>0){
@@ -52,7 +50,7 @@ public class Message{
 
 	public boolean isBeginDialog(){
 		String[] messageSplit = this.message.split(" ");
-		return (messageSplit[0].equals("!beginDialog") && (messageSplit.length==2) && messageSplit[1].matches("-?\\d+"));
+		return (messageSplit[0].equals("!beginDialog") && ((messageSplit.length==1) || ((messageSplit.length==2) && messageSplit[1].matches("-?\\d+"))));
 	}
 
 	public boolean isEndDialog(){
@@ -62,6 +60,23 @@ public class Message{
 	public boolean isSaveLog(){
 		return this.message.equals("!saveLog");
 	}
+
+	public boolean isChatbotPerformance(){
+		return this.message.equals("!chatbotPerformance");
+	}
+
+	public boolean isSaveToJson(){
+		return this.message.equals("!saveToJson");
+	}
+	public boolean isSaveToXml(){
+		return this.message.equals("!saveToXml");
+	}
+
+	public boolean isHelp(){
+		return this.message.equals("!help");
+	}
+
+
 
 	public boolean isLoadLog(){
 		String[] messageSplit = this.message.split(" ");
@@ -139,10 +154,6 @@ public class Message{
 		return false;
 	}
 
-
-	
-
-
 	public int[] determinarCaminoNivel(){
 		if(this.dijoRecomendar()){
 			return new int[]{1,0};
@@ -166,12 +177,6 @@ public class Message{
 		return this.getDateStr()+">"+this.getSender()+">"+this.getMessage();
 	}
 
-
-
-
-
-
-
 	public String getSender(){
 		return this.sender;
 	}
@@ -188,6 +193,10 @@ public class Message{
 
 	public String getMessage(){
 		return this.message;
+	}
+
+	public int compareTo(Message otroMensaje){
+		return this.date.compareTo(otroMensaje.getDate());
 	}
 
 

@@ -34,11 +34,6 @@ public class Pelicula implements Comparable<Pelicula>{
 	}
 	
 
-	public String toString(){
-	
-		return this.name + " (" + Integer.toString(this.score) + ")";
-	}
-
 	public String getGender(){
 		return this.gender;
 	}
@@ -82,9 +77,5 @@ public class Pelicula implements Comparable<Pelicula>{
 	public int compareTo(Pelicula other){
 		return Integer.compare(this.score, other.score);
 	}
-
-
-
-
 
 }

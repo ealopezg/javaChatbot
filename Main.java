@@ -24,9 +24,7 @@ public class Main{
 			peliculas.add(peliculaNueva);
 		}
 
-
 		
-
 		User usuario = new User();
 		Scanner keyboard = new Scanner(System.in);
 		Log log = new Log();
@@ -37,19 +35,63 @@ public class Main{
 	
 		boolean flag = true;
 		boolean started = false;
+		boolean finished = false;
 		boolean command = false;
-		System.out.println("Este chatbot es de un Cine.\nte recomienda peliculas de la cartelera, \ny te muestra los horarios para una película en especifico\nPara iniciar el chat usa el comando '!beginDialog seed '\n");
+		boolean rated = false;
+		System.out.println("Este chatbot es de un Cine.\nte recomienda peliculas de la cartelera, \ny te muestra los horarios para una película en especifico\nPara iniciar el chat usa el comando '!beginDialog seed '\nPara más ayuda usa '!help\n");
 		while(flag){
 			System.out.print(usuario.getNombre()+"> ");
 			inMessage = new Message(keyboard.nextLine(),usuario.getNombre());
-			if(( inMessage.isEndDialog() || inMessage.isSaveLog() || inMessage.isRate()) && !started){
+			if(( inMessage.isEndDialog() || inMessage.isRate()) && !started){
 				System.out.println("[!] No puedes utilizar este comando si no has iniciado el chat con !beginDialog");
 			}
-			else if((inMessage.isBeginDialog() || inMessage.isLoadLog())&& started){
+			else if((inMessage.isBeginDialog() || inMessage.isLoadLog()) && started){
 				System.out.println("[!] No puedes utilizar este comando si has iniciado el chat");
 			}
+			else if(inMessage.isRate() && rated && started){
+				System.out.println("[!] No puedes volver a calificar al chatbot");
+			}
+			else if(inMessage.isRate() && !finished){
+				System.out.println("[!] No puedes calificar al chatbot si no finalizas, para finalizar usa !endDialog");
+			}
+			else if(inMessage.isChatbotPerformance()){
+				log.chatbotPerformance();
+			}
+			else if(inMessage.isSaveToJson()){
+				try {
+						log.saveToJson();;
+					}
+				catch(IOException e) {
+						  System.out.println("[!] Error en guardar el log en formato JSON");
+						}
+			}
+			else if(inMessage.isSaveToXml()){
+				try {
+						log.saveToXML();;
+					}
+				catch(IOException e) {
+						  System.out.println("[!] Error en guardar el log en formato XML");
+						}
+			}
+			else if(inMessage.isHelp()){
+				String ayuda =
+				"[!] Ayuda:\n"+
+				"\t!beginDialog seed : Inicia la conversacion.\n"+
+				"\t!beginDialog : Inicia la conversacion utilizando lenguaje formal y seed 0.\n"+
+				"\t!saveLog : Guarda el log en un archivo.\n"+
+				"\t!loadLog nombreArchivo : Carga el log desde un archivo.\n"+
+				"\t!rate notaChatbot notaUsuario: Evalua al chatbot y a ti mismo.\n"+
+				"\t!endDialog : Finaliza la conversacion.\n"+
+				"\t!saveToJson : Guarda el log en un archivo con formato tipo JSON.\n"+
+				"\t!saveToXml : Guarda el log en un archivo con formato tipo XML.\n"+
+				"\t!chatbotPerformance : Muestra en pantalla la cantidad de evaluaciones, el promedio y la desviacion estandar.\n"+
+				"\t!exit : Finaliza el programa.\n"+
+				"\t!help : Muestra esto.\n";
+				System.out.println(ayuda);
+
+			}
 			else{
-				if( !inMessage.isLoadLog() || !inMessage.isExit() ){
+				if(!inMessage.isLoadLog() || !inMessage.isExit() ){
 					log.writeToLog(inMessage);
 				}
 				command = inMessage.isCommand();
@@ -58,12 +100,31 @@ public class Main{
 					flag=false;
 				}
 
+				if(inMessage.isRate() && !rated && finished){
+					int nC = Integer.parseInt(inMessage.commandArgs()[0]);
+					int nU = Integer.parseInt(inMessage.commandArgs()[1]);
+					if(0<=nC && nC<=5 && 0<=nU && nU<=5){
+						Rate calificacion = new Rate(nC,nU);
+						log.writeRate(calificacion);
+						rated = true;
+						System.out.println("[!] Chatbot y Usuario evaluados correctamente");
+
+					}
+					else{
+						System.out.println("[!] Error, los valores tienen que estar entre 1 y 5, o 0 si no se puede determinar");
+					}
+
+
+				}
+
 
 				if(inMessage.isEndDialog()){
 					started = false;
 					outMessage = chatbot.finalMessage();
 					System.out.println(outMessage.getSender()+"> "+outMessage.getMessage());
 					log.writeToLog(outMessage);
+					rated = false;
+					usuario = new User();
 				}
 
 				if(inMessage.isSaveLog()){
@@ -71,7 +132,7 @@ public class Main{
 						log.saveLog();
 					}
 					catch(IOException e) {
-						  System.out.println("ERROR");
+						  System.out.println("[!] Error al guardar el Log");
 						}
 				}
 
@@ -81,7 +142,7 @@ public class Main{
 					Date cbotDate = new Date();
 
 					if(listaMensajes.size()>0){
-						String anuncio = "Archivo "+argumentos[0]+" cargado completamente";
+						String anuncio = "[!] Archivo "+argumentos[0]+" cargado completamente";
 						System.out.println(anuncio);
 					}
 
@@ -99,13 +160,24 @@ public class Main{
 							log.writeToLog(inMessage);
 							command = inMessage.isCommand();
 
+							if(inMessage.isRate() && !rated && finished){
+								int nC = Integer.parseInt(inMessage.commandArgs()[0]);
+								int nU = Integer.parseInt(inMessage.commandArgs()[1]);
+								if(0<=nC && nC<=5 && 0<=nU && nU<=5){
+									Rate calificacion = new Rate(nC,nU,inMessage.getDate());
+									log.writeRate(calificacion);
+									rated=true;
+
+								}
+							}
+
 
 							if(inMessage.isEndDialog()){
 								started = false;
 								outMessage = chatbot.finalMessage(cbotDate);
-								System.out.println(outMessage.getSender()+"> "+outMessage.getMessage());
 								log.writeToLog(outMessage);
 								usuario = new User();
+								rated = false;
 
 							}
 
@@ -135,11 +207,16 @@ public class Main{
 							}
 
 							if(inMessage.isBeginDialog() && !started){
-								seed = Integer.parseInt(inMessage.commandArgs()[0]);
-								chatbot = new Chatbot(seed,peliculas);
-								outMessage = chatbot.initialMessage(cbotDate);
-								log.writeToLog(outMessage);
-								started=true;
+								if(inMessage.commandArgs()[0]==null){
+									chatbot = new Chatbot(peliculas);
+								}
+								else{
+									seed = Integer.parseInt(inMessage.commandArgs()[0]);
+									chatbot = new Chatbot(seed,peliculas);
+								}
+									outMessage = chatbot.initialMessage(cbotDate);
+									log.writeToLog(outMessage);
+									started=true;								
 							}
 
 
@@ -148,6 +225,7 @@ public class Main{
 						}	
 
 					}
+					log.ordenarLog();
 
 
 					
@@ -179,12 +257,17 @@ public class Main{
 				}
 
 				if(inMessage.isBeginDialog() && !started){
-					seed = Integer.parseInt(inMessage.commandArgs()[0]);
-					chatbot = new Chatbot(seed,peliculas);
-					outMessage = chatbot.initialMessage();
-					System.out.println(outMessage.getSender()+"> "+outMessage.getMessage());
-					log.writeToLog(outMessage);
-					started=true;
+					if(inMessage.commandArgs()[0]==null){
+						chatbot = new Chatbot(peliculas);
+					}
+					else{
+						seed = Integer.parseInt(inMessage.commandArgs()[0]);
+						chatbot = new Chatbot(seed,peliculas);
+					}
+						outMessage = chatbot.initialMessage();
+						System.out.println(outMessage.getSender()+"> "+outMessage.getMessage());
+						log.writeToLog(outMessage);
+						started=true;								
 				}
 			}
 
